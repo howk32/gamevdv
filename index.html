@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Космический шутер</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #0f0;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #0f0;
+            text-shadow: 0 0 10px #0f0;
+        }
+        .game-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #0f0;
+            border-radius: 10px;
+            background-color: #111;
+            position: relative;
+        }
+        .download-section {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 10px;
+        }
+        .btn {
+            background-color: #0a0;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #0f0;
+        }
+        .instructions {
+            text-align: left;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+        .feature {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #222;
+            border-left: 3px solid #0f0;
+        }
+        /* Fullscreen styles */
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            margin: 0 auto;
+        }
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            border: 1px solid #0f0;
+        }
+        #fullscreenBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 255, 0, 0.3);
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 5px 10px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        #fullscreenBtn:hover {
+            background-color: rgba(0, 255, 0, 0.5);
+        }
+        /* Fullscreen mode */
+        .fullscreen-game {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1000;
+        }
+        .fullscreen-game #gameCanvas {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .fullscreen-game #fullscreenBtn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+        }
+        /* Loading and error messages */
+        .loading-message, .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #0f0;
+            font-size: 18px;
+            text-align: center;
+            z-index: 5;
+        }
+        .error-message {
+            color: #f00;
+        }
+        /* Debug info */
+        .debug-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #0f0;
+            font-size: 12px;
+            z-index: 5;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            border-radius: 3px;
+        }
+        /* Alternative run instructions */
+        .local-run-instructions {
+            background-color: #333;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Космический шутер</h1>
+        
+        <div class="game-container">
+            <h2>Играть в космический шутер</h2>
+            <p>Испытайте классическую игру в космический шутер в вашем браузере!</p>
+            
+            <div class="game-wrapper">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+                <button id="fullscreenBtn" class="btn">На весь экран</button>
+                <div id="loadingMessage" class="loading-message">Загрузка игры...</div>
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="debugInfo" class="debug-info" style="display: none;"></div>
+            </div>
+            
+            <p>Используйте стрелки для движения и ПРОБЕЛ для выстрела</p>
+        </div>
+        
+        <div class="local-run-instructions">
+            <h3>Проблемы с запуском в браузере?</h3>
+            <p>Если игра не загружается в вашем браузере, вы можете запустить её локально:</p>
+            <ol>
+                <li>Скачайте файлы игры</li>
+                <li>Установите Python с <a href="https://python.org" style="color: #0f0;">python.org</a></li>
+                <li>Установите Pygame: <code style="background: #222; padding: 2px 5px;">pip install pygame</code></li>
+                <li>Запустите игру: <code style="background: #222; padding: 2px 5px;">python space_shooter_russian.py</code></li>
+            </ol>
+        </div>
+        
+        <div class="download-section">
+            <h2>Скачать автономную версию</h2>
+            <p>Играйте в полную версию космического шутера на вашем компьютере</p>
+            
+            <a href="space_shooter_russian.py" class="btn" download>
+                Скачать полную игру
+            </a>
+            
+            <a href="space_shooter_browser.py" class="btn" download>
+                Скачать версию для браузера
+            </a>
+        </div>
+        
+        <div class="instructions">
+            <h2>Особенности игры</h2>
+            
+            <div class="feature">
+                <h3>Классические космические бои</h3>
+                <p>Сражайтесь через 5 сложных уровней с уникальными паттернами атак врагов</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Система улучшений</h3>
+                <p>Зарабатывайте очки для улучшения урона, здоровья, скорости корабля и многое другое</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Потрясающая графика</h3>
+                <p>Наслаждайтесь анимированным параллакс-фоном и эффектами взрывов</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Звуковые эффекты</h3>
+                <p>Захватывающий звук выстрелов, взрывов и навигации по меню</p>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>Как играть</h2>
+            <p><strong>Управление:</strong> Стрелки для движения, ПРОБЕЛ для выстрела, ESC для меню</p>
+            <p><strong>Цель:</strong> Уничтожайте вражеские корабли и выживайте как можно дольше</p>
+            <p><strong>Подсчет очков:</strong> Зарабатывайте очки за каждого уничтоженного врага</p>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 20px; background-color: #333; border-radius: 10px;">
+            <h3>Системные требования</h3>
+            <p>Python 3.7+ с библиотекой Pygame</p>
+            <p>Установка: <code>pip install pygame</code></p>
+        </div>
+    </div>
+
+    <!-- PyGame.js library for running Python PyGame in browser -->
+    <script>
+        // Function to load script dynamically with error handling
+        function loadScript(src, onLoad, onError) {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = onLoad;
+            script.onerror = onError;
+            document.head.appendChild(script);
+        }
+        
+        // Try to load PyGame.js from different sources
+        loadScript('https://pygame-web.github.io/pygamejs.js', function() {
+            console.log('PyGame.js успешно загружен');
+            initializeGame();
+        }, function() {
+            console.log('Не удалось загрузить PyGame.js из основного источника');
+            // Try alternative approach - show local run instructions
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('errorMessage').innerHTML = `
+                <p>Версия для браузера требует онлайн-библиотеки, которые в данный момент недоступны.</p>
+                <p><a href="space_shooter_russian.py" class="btn" style="display: inline-block; margin-top: 10px;">Скачать и запустить локально</a></p>
+                <p style="font-size: 14px; margin-top: 15px;">Смотрите инструкции выше для локальной установки</p>
+            `;
+            document.getElementById('debugInfo').style.display = 'block';
+            document.getElementById('debugInfo').textContent = 'PyGame.js недоступен, используйте локальную версию';
+        });
+    </script>
+    
+    <script>
+        // Get canvas and context
+        const canvas = document.getElementById('gameCanvas');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const debugInfo = document.getElementById('debugInfo');
+        
+        // Function to show error message
+        function showErrorMessage(message) {
+            errorMessage.innerHTML = `
+                <p>${message}</p>
+                <p><a href="space_shooter_russian.py" class="btn" style="display: inline-block; margin-top: 10px;">Скачать и запустить локально</a></p>
+                <p style="font-size: 14px; margin-top: 15px;">Смотрите инструкции выше для локальной установки</p>
+            `;
+            errorMessage.style.display = 'block';
+            loadingMessage.style.display = 'none';
+            debugInfo.textContent = 'Ошибка: ' + message;
+        }
+        
+        // Set canvas dimensions to match its display size
+        function resizeCanvas() {
+            const displayWidth = canvas.clientWidth;
+            const displayHeight = canvas.clientHeight;
+            
+            if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+                canvas.width = displayWidth;
+                canvas.height = displayHeight;
+            }
+        }
+        
+        // Initial resize
+        resizeCanvas();
+        
+        // Handle window resize
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Fullscreen functionality
+        fullscreenBtn.addEventListener('click', () => {
+            const gameWrapper = document.querySelector('.game-wrapper');
+            
+            if (!document.fullscreenElement) {
+                if (gameWrapper.requestFullscreen) {
+                    gameWrapper.requestFullscreen();
+                } else if (gameWrapper.mozRequestFullScreen) {
+                    gameWrapper.mozRequestFullScreen();
+                } else if (gameWrapper.webkitRequestFullscreen) {
+                    gameWrapper.webkitRequestFullscreen();
+                } else if (gameWrapper.msRequestFullscreen) {
+                    gameWrapper.msRequestFullscreen();
+                }
+                
+                // Update button text
+                fullscreenBtn.textContent = 'Выйти из полноэкранного режима';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                
+                // Update button text
+                fullscreenBtn.textContent = 'На весь экран';
+            }
+        });
+        
+        // Handle fullscreen change events
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+        
+        function handleFullscreenChange() {
+            const gameWrapper = document.querySelector('.game-wrapper');
+            if (!document.fullscreenElement && 
+                !document.webkitFullscreenElement && 
+                !document.mozFullScreenElement && 
+                !document.msFullscreenElement) {
+                fullscreenBtn.textContent = 'На весь экран';
+                gameWrapper.classList.remove('fullscreen-game');
+            } else {
+                fullscreenBtn.textContent = 'Выйти из полноэкранного режима';
+            }
+        }
+        
+        // Initialize game function
+        function initializeGame() {
+            // Show debug info
+            debugInfo.style.display = 'block';
+            debugInfo.textContent = 'Инициализация игрового движка...';
+            
+            // Check if pygamejs is available
+            if (typeof pygamejs === 'undefined') {
+                showErrorMessage('Игровой движок недоступен. Версия для браузера требует специфических библиотек, которые могут быть недоступны.');
+                return;
+            }
+            
+            debugInfo.textContent = 'Инициализация PyGame.js...';
+            
+            // Hide loading message after a short delay to show the initial screen
+            setTimeout(() => {
+                loadingMessage.style.display = 'none';
+                debugInfo.textContent = 'Загрузка игровых ресурсов...';
+                
+                // Initialize PyGame.js
+                pygamejs.init(document.getElementById('gameCanvas')).then(() => {
+                    debugInfo.textContent = 'PyGame.js инициализирован, загрузка игры...';
+                    // Run the browser-compatible game
+                    pygamejs.run('space_shooter_browser.py').catch((error) => {
+                        console.error('Ошибка запуска игры:', error);
+                        showErrorMessage('Не удалось загрузить игру: ' + error.message);
+                        debugInfo.textContent = 'Ошибка: ' + error.message;
+                    });
+                }).catch((error) => {
+                    console.error('Ошибка инициализации PyGame.js:', error);
+                    showErrorMessage('Не удалось инициализировать игровой движок: ' + error.message);
+                    debugInfo.textContent = 'Ошибка инициализации: ' + error.message;
+                });
+            }, 1000);
+        }
+        
+        // If we're still here after a few seconds, show instructions
+        setTimeout(() => {
+            if (debugInfo.textContent === 'Инициализация PyGame.js...') {
+                debugInfo.textContent = 'Загрузка... Это может занять некоторое время.';
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
